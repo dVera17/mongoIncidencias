@@ -61,6 +61,71 @@ db.createCollection("incidencia", {
     }
 });
 
+db.createCollection("usuario", {
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            required: ["cedula", "nombre", "rol"],
+            properties: {
+                cedula: { bsonType: "string", description: "'cc_usu' solo puede contener números y es requerido", pattern: "^[0-9]+$" },
+                nombre: { bsonType: "string", description: "'nombre_usu' debe ser un string y es requerido" },
+                rol: { bsonType: "array", description: "'rol_usu' es requerido", items: { bsonType: "int" } },
+                permisos: {
+                    bsonType: 'object',
+                    description: "Debe ingresar los permisos",
+                    patternProperties: { "^/.*": { bsonType: "array" } }
+                }
+            }
+        }
+    }
+});
+
+db.createCollection("rol", {
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            required: ["id", "nombre"],
+            properties: {
+                id: { bsonType: "int", description: "'id_rol' debe ser un entero y es requerido" },
+                nombre: { bsonType: "string", description: "'nombre_usu' debe ser un string y es requerido", pattern: "^[a-zA-Z ]+$" },
+            }
+        }
+    }
+});
+
+db.rol.insertMany([
+    {
+        id: 1,
+        nombre: "admin"
+    },
+    {
+        id: 1,
+        nombre: "usuario"
+    }
+])
+
+db.usuario.insertMany([
+    {
+        cedula: "123456789",
+        nombre: "santiago",
+        rol: [1],
+        permisos: {
+            "/area": ["1.0.0"],
+            "/dispositivo": ["1.0.0"],
+            "/incidencia": ["1.0.0"],
+            "/trainer": ["1.0.0"]
+        }
+    },
+    {
+        cedula: "987654321",
+        nombre: "daniel",
+        rol: [2],
+        permisos: {
+            "/area": ["1.0.0"]
+        }
+    }
+])
+
 db.area.insertMany([
     {
         id: 1,
