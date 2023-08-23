@@ -1,0 +1,95 @@
+use('db_incidencias');
+db.createCollection("area", {
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            required: ["id", "nombre", "tipo"],
+            properties: {
+                id: { bsonType: "int", description: "'id_area' debe ser un entero y es requerido" },
+                nombre: { enum: ['apolo', 'artemis', 'sputnik', 'skylab', 'corvus', 'endor'], description: "'nombre_area' no existe" },
+                tipo: { enum: ['training', 'review1', 'review2'], description: "'tipo_area' no existe" }
+            }
+        }
+    }
+});
+
+db.createCollection("dispositivo", {
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            required: ["id", "marca", "modelo", "tipo", "idArea"],
+            properties: {
+                id: { bsonType: "int", description: "'id_dis' debe ser un entero y es requerido" },
+                marca: { bsonType: "string", description: "'marca_dis' debe ser un string" },
+                modelo: { bsonType: "string", description: "'modelo_dis' debe ser un string y es requerido" },
+                tipo: { enum: ['computador', 'teclado', 'mouse', 'diademas'], description: "'tipo_dis' no existe" },
+                idArea: { bsonType: "int", description: "'id_area' debe ser un entero y es requerido" }
+            }
+        }
+    }
+});
+
+db.createCollection("trainer", {
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            required: ["cedula", "nombre", "telefono", "emailCorp"],
+            properties: {
+                cedula: { bsonType: "string", description: "'cc_tra' solo puede contener números y es requerido", pattern: "^[0-9]+$" },
+                nombre: { bsonType: "string", description: "'nombre_tra' debe ser un string y es requerido" },
+                telefono: { bsonType: "string", description: "'telef_tra' solo puede contener numeros y es requerido", pattern: "^[0-9]+$" },
+                emailPersonal: { bsonType: "string", description: "'email_pesonal' es requerido" },
+                emailCorp: { bsonType: "string", description: "'email_corp' es requerido" }
+            }
+        }
+    }
+});
+
+db.createCollection("incidencia", {
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            required: ["id", "descripcion", "fecha", "categoria", "tipo"],
+            properties: {
+                id: { bsonType: "int", description: "'id_inc' debe ser un entero y es requerido" },
+                descripcion: { bsonType: "string", description: "'descrip_inc' debe ser un string y es requerido" },
+                fecha: { bsonType: "date", description: "'fecha_reporte' debe ser una fecha valida y es requerida" },
+                categoria: { enum: ['hardware', 'software'], description: "'categoria_inc' solo puede ser de tipo ['hardware', 'software']" },
+                tipo: { enum: ['leve', 'moderada', 'critica'], description: "'tipo_inc' solo puede ser de tipo ['leve', 'moderada', 'critica']" }
+            }
+        }
+    }
+});
+
+db.area.insertMany([
+    {
+        id: 1,
+        nombre: "apolo",
+        tipo: "training"
+    },
+    {
+        id: 2,
+        nombre: "artemis",
+        tipo: "training"
+    },
+    {
+        id: 3,
+        nombre: "sputnik",
+        tipo: "training"
+    },
+    {
+        id: 4,
+        nombre: "skylab",
+        tipo: "training"
+    },
+    {
+        id: 5,
+        nombre: "corvus",
+        tipo: "review1"
+    },
+    {
+        id: 6,
+        nombre: "endor",
+        tipo: "review2"
+    }
+]);
