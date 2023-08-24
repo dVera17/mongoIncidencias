@@ -35,7 +35,7 @@ db.createCollection("trainer", {
             bsonType: "object",
             required: ["cedula", "nombre", "telefono", "emailCorp"],
             properties: {
-                cedula: { bsonType: "string", description: "'cc_tra' solo puede contener números y es requerido", pattern: "^[0-9]+$" },
+                cedula: { bsonType: "int", description: "'cc_tra' solo puede contener números y es requerido" },
                 nombre: { bsonType: "string", description: "'nombre_tra' debe ser un string y es requerido" },
                 telefono: { bsonType: "string", description: "'telef_tra' solo puede contener numeros y es requerido", pattern: "^[0-9]+$" },
                 emailPersonal: { bsonType: "string", description: "'email_pesonal' es requerido" },
@@ -55,7 +55,8 @@ db.createCollection("incidencia", {
                 descripcion: { bsonType: "string", description: "'descrip_inc' debe ser un string y es requerido" },
                 fecha: { bsonType: "date", description: "'fecha_reporte' debe ser una fecha valida y es requerida" },
                 categoria: { enum: ['hardware', 'software'], description: "'categoria_inc' solo puede ser de tipo ['hardware', 'software']" },
-                tipo: { enum: ['leve', 'moderada', 'critica'], description: "'tipo_inc' solo puede ser de tipo ['leve', 'moderada', 'critica']" }
+                tipo: { enum: ['leve', 'moderada', 'critica'], description: "'tipo_inc' solo puede ser de tipo ['leve', 'moderada', 'critica']" },
+                id_area: { bsonType: "int", description: "'id_area' debe ser un entero y es requerido", minimum: 1, maximum: 6 }
             }
         }
     }
@@ -67,7 +68,7 @@ db.createCollection("usuario", {
             bsonType: "object",
             required: ["cedula", "nombre", "rol"],
             properties: {
-                cedula: { bsonType: "string", description: "'cc_usu' solo puede contener números y es requerido", pattern: "^[0-9]+$" },
+                cedula: { bsonType: "int", description: "'cc_usu' solo puede contener números y es requerido" },
                 nombre: { bsonType: "string", description: "'nombre_usu' debe ser un string y es requerido" },
                 rol: { bsonType: "array", description: "'rol_usu' es requerido", items: { bsonType: "int" } },
                 permisos: {
@@ -106,7 +107,7 @@ db.rol.insertMany([
 
 db.usuario.insertMany([
     {
-        cedula: "123456789",
+        cedula: 123456789,
         nombre: "santiago",
         rol: [1],
         permisos: {
@@ -117,11 +118,20 @@ db.usuario.insertMany([
         }
     },
     {
-        cedula: "987654321",
+        cedula: 987654321,
         nombre: "daniel",
         rol: [2],
         permisos: {
             "/area": ["1.0.0"]
+        }
+    }
+])
+
+use('db_incidencias');
+db.area.aggregate([
+    {
+        $match: {
+            tipo: "training"
         }
     }
 ])
@@ -158,3 +168,4 @@ db.area.insertMany([
         tipo: "review2"
     }
 ]);
+
