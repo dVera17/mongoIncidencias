@@ -1,13 +1,9 @@
-import { body, validationResult } from "express-validator";
+import { check } from "express-validator";
 
 export const validateDTODispositivo = [
-    body('id').notEmpty().isNumeric().withMessage('El id es requerido'),
-    body('marca').notEmpty().isString().withMessage('La marca es requerida'),
-    body('modelo').notEmpty().isString().withMessage('El modelo es requerida'),
-    body('idArea').notEmpty().isNumeric().withMessage('El idArea es requerido')
-]
-
-export const errDTO = (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
-}
+    check('id').notEmpty().withMessage('El id es requerido y debe ser númerico').not().isString(),
+    check('marca').notEmpty().isString().withMessage('La marca es requerida'),
+    check('modelo').notEmpty().isString().withMessage('El modelo es requerida'),
+    check('tipo').notEmpty().isString().withMessage('El tipo es requerida'),
+    check('idArea').notEmpty().isNumeric().withMessage('El idArea es requerido')
+] 
